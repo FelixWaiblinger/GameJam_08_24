@@ -61,22 +61,22 @@ public class InputReader : ScriptableObject, Controls.IGameActions
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        DashEvent?.Invoke();
+        if (context.started) DashEvent?.Invoke();
     }
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        AttackEvent?.Invoke();
+        if (context.started) AttackEvent?.Invoke();
     }
 
     public void OnMenu(InputAction.CallbackContext context)
     {
-        MenuEvent?.Invoke();
+        if (context.started) MenuEvent?.Invoke();
     }
 
     public void OnPause(InputAction.CallbackContext context)
     {
-        PauseEvent?.Invoke();
+        if (context.started) PauseEvent?.Invoke();
     }
 
     #endregion
