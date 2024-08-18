@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-[CreateAssetMenu(fileName = "InputReader", menuName = "Event/InputReader")]
+[CreateAssetMenu(fileName = "InputReader", menuName = "Input/InputReader")]
 public class InputReader : ScriptableObject, Controls.IGameActions
 {
     public static UnityAction<Vector2> MoveEvent;
