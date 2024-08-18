@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ButtonController : MonoBehaviour {
 
-    [SerializeField] private BoolEventChannel _buttonPressed;
+    [SerializeField] private VoidEventChannel _buttonPressed;
 
+    public void ButtonPressed() {
+        _buttonPressed.RaiseVoidEvent();
+    }
 }
