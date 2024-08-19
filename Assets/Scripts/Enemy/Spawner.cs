@@ -7,7 +7,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] BoolEventChannel _modeEvent;
     [SerializeField] Vector2 _areaHalfSize;
     [SerializeField] float _spawnTime;
-    List<Enemy> _spawnedEnemies = new();
+    int _difficulty = -1;
     float _lastSpawn = -10;
     bool _spawning = false;
 
@@ -51,8 +51,7 @@ public class Spawner : MonoBehaviour
         }
 
         _lastSpawn = Time.time;
-        var enemy = Instantiate(enemyType, position, Quaternion.identity);
-        _spawnedEnemies.Add(enemy);
+        Instantiate(enemyType, position, Quaternion.identity);
     }
 
     void ToggleSpawning(bool fightMode)
@@ -61,15 +60,22 @@ public class Spawner : MonoBehaviour
 
         if (!_spawning)
         {
-            // TODO this calls damage on already destroyed enemies...
-            foreach (IDamagable enemy in _spawnedEnemies)
+            var enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach (var enemy in enemies)
             {
-                if (enemy == null) continue;
-
-                // I hope MAXINT wont cause problems :D
-                enemy?.Damage(int.MaxValue);
+                Destroy(enemy);
             }
-            _spawnedEnemies.Clear();
+
+            var projectiles = GameObject.FindGameObjectsWithTag("Projectile");
+            foreach (var projectile in projectiles)
+            {
+                Destroy(projectile);
+            }
+        }
+        else
+        {
+            // make each fight harder
+            _spawnTime = Mathf.Clamp(_spawnTime * Mathf.Pow(0.9f, ++_difficulty), 0.33f, 10);
         }
     }
 }

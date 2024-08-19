@@ -1,7 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamagable, ICollector
 {
     Camera _camera;
     Rigidbody2D _rb;
@@ -15,17 +16,29 @@ public class PlayerController : MonoBehaviour
     float _currentSpeed = 0;
 
     [Header("Attack")]
-    [SerializeField] Transform _attack;
+    [SerializeField] GameObject _attackVisual;
+    [SerializeField] Vector2 _attackAreaSize;
     [SerializeField] int _attackDamage;
     [SerializeField] float _attackDuration;
     [SerializeField] float _attackCooldown;
     Coroutine _attackCoroutine;
     Vector3 _targetPosition = Vector3.zero;
     Vector3 ignoreZ = new Vector3(1, 1, 0);
+    float _attackSign = 1;
+
+    [Header("Health")]
+    [SerializeField] SpriteRenderer _sprite;
+    [SerializeField] int _health;
+    [SerializeField] float _immunityDuration;
+
+    [Header("Upgrades")]
+    [SerializeField] int _inventorySize;
+    List<ItemType> _items = new();
 
     // timer
     float _dashTimer = -10;
     float _attackTimer = -10;
+    float _immunityTimer = -10;
     // requests
     bool _dashRequested = false;
     bool _attackRequested = false;
@@ -34,6 +47,7 @@ public class PlayerController : MonoBehaviour
     bool _dashOnCD = false;
     bool _attacking = false;
     bool _attackOnCD = false;
+    bool _immunity = false;
 
     void OnEnable()
     {
@@ -49,14 +63,6 @@ public class PlayerController : MonoBehaviour
         InputReader.AimEvent -= Aim;
         InputReader.DashEvent -= Dash;
         InputReader.AttackEvent -= Attack;
-    }
-
-    // attack hit area
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.layer != LayerMask.NameToLayer("Enemy")) return;
-
-        other.GetComponent<IDamagable>().Damage(_attackDamage);
     }
 
     void Start()
@@ -113,6 +119,7 @@ public class PlayerController : MonoBehaviour
         _dashOnCD = (_dashTimer + _dashCooldown) >= currentTime;
         _attacking = (_attackTimer + _attackDuration) >= currentTime;
         _attackOnCD = (_attackTimer + _attackCooldown) >= currentTime;
+        _immunity = (_immunityTimer + _immunityDuration) >= currentTime;
 
         Physics2D.IgnoreLayerCollision(6, 7, ignore: _dashing);
         
@@ -120,30 +127,100 @@ public class PlayerController : MonoBehaviour
         {
             _attackTimer = -10;
             StopCoroutine(_attackCoroutine);
-            _attack.gameObject.SetActive(false);
+            _attackVisual.SetActive(false);
             _attacking = false;
         }
     }
 
+    #region INTERFACE
+
+    public void Damage(int amount)
+    {
+        if (_immunity) return;
+
+        _health -= amount;
+        _immunityTimer = Time.time;
+        StartCoroutine(DamageCoroutine());
+
+        // TODO game over
+        if (_health < 0) Debug.Log("U ded brotha");
+    }
+
+    public bool Collect(ItemType item)
+    {
+        if (_items.Count >= _inventorySize) return false;
+        
+        _items.Add(item);
+        return true;
+    }
+
+    #endregion
+
+    #region COROUTINES
+
     IEnumerator AttackCoroutine()
     {
-        var speed = 10;
-        var sign = Random.value >= 0.5 ? 1 : -1;
         var direction = (_targetPosition - transform.position).normalized;
-        var look = Quaternion.LookRotation(Vector3.forward, Quaternion.Euler(0, 0, -45) * direction);
-        var start = new Vector3(0, 0, (look.eulerAngles.z + sign * -70) % 360);
-        var end = new Vector3(0, 0, (look.eulerAngles.z + sign * 70) % 360);
+        var look = Quaternion.LookRotation(
+            Vector3.forward,
+            Quaternion.Euler(0, 0, -45) * direction
+        );
+        var start = new Vector3(0, 0, (look.eulerAngles.z + _attackSign * -70) % 360);
+        var end = new Vector3(0, 0, (look.eulerAngles.z + _attackSign * 70) % 360);
+        var damageApplied = false;
 
-        _attack.rotation = Quaternion.Euler(start);
-        _attack.gameObject.SetActive(true);
+        _attackVisual.transform.rotation = Quaternion.Euler(start);
+        _attackVisual.SetActive(true);
 
         for (float i = 0; i < _attackDuration; i += Time.deltaTime)
         {
-            _attack.rotation = Quaternion.RotateTowards(_attack.rotation, Quaternion.Euler(end), speed);
+            if (i / _attackDuration > 0.5 && !damageApplied)
+            {
+                // find all enemies in attack area
+                var enemies = Physics2D.BoxCastAll(
+                    _attackVisual.transform.GetChild(0).position,
+                    _attackAreaSize,
+                    _attackVisual.transform.rotation.z,
+                    Vector2.up,
+                    0.01f,
+                    1 << LayerMask.NameToLayer("Enemy")
+                );
+
+                // damage these enemies
+                foreach (var enemy in enemies)
+                {
+                    enemy.collider.GetComponent<IDamagable>().Damage(_attackDamage);
+                }
+
+                // just once tho
+                damageApplied = true;
+            }
+
+            _attackVisual.transform.rotation = Quaternion.RotateTowards(
+                _attackVisual.transform.rotation,
+                Quaternion.Euler(end),
+                10
+            );
 
             yield return new WaitForEndOfFrame();
         }
 
-        _attack.gameObject.SetActive(false);
+        _attackSign *= -1;
+        _attackVisual.SetActive(false);
     }
+
+    IEnumerator DamageCoroutine()
+    {
+        var normalColor = _sprite.color;
+
+        for (int i = 0; i < 10; i++)
+        {
+            _sprite.color = i % 2 == 0 ? Color.red : normalColor;
+            yield return new WaitForEndOfFrame();
+        }
+
+        _sprite.color = normalColor;
+    }
+
+    #endregion
 }
