@@ -11,9 +11,9 @@ public class Item : MonoBehaviour
         _sprite.color = ItemType.Color;
     }
     
-    void OnCollisionEnter2D(Collision2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
-        var success = other.gameObject.GetComponent<ICollector>().Collect(ItemType);
+        var success = other.GetComponent<ICollector>().Collect(ItemType);
 
         if (success) Destroy(gameObject);
     }

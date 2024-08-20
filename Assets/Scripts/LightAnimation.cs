@@ -13,6 +13,6 @@ public class LightAnimation : MonoBehaviour
 
     void Update()
     {
-        _light.intensity = _intensityMean + Mathf.Sin(Time.time);
+        _light.intensity = _intensityMean + Mathf.Sin(Time.time) * 2;
     }
 }

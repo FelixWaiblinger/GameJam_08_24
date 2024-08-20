@@ -186,6 +186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14db75116f7b5a446b329302b2d18429, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _deathEvent: {fileID: 11400000, guid: 4261d6575d72c5b4cacb8eaba95cc56f, type: 2}
   _sprite: {fileID: 2870659610337045600}
   _item: {fileID: 4583390307370967944, guid: 139b1c79823c2d549a276d4a3a3c7f4e, type: 3}
   _itemType: {fileID: 11400000, guid: 2bdacb80983b0a3448b34778339b1045, type: 2}

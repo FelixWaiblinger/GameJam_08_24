@@ -5,4 +5,5 @@ public class ItemType : ScriptableObject
 {
     public string Name;
     public Color Color;
+    public float Multiplier;
 }

@@ -7,6 +7,6 @@ public class ButtonController : MonoBehaviour {
     [SerializeField] private VoidEventChannel _buttonPressed;
 
     public void ButtonPressed() {
-        _buttonPressed.RaiseVoidEvent();
+        _buttonPressed.VoidEvent();
     }
 }

@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: MeleeScale
   Color: {r: 1, g: 0.9529412, b: 0.7490196, a: 1}
+  Multiplier: 1.2

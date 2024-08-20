@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: RangeScale
   Color: {r: 0.61960787, g: 1, b: 0.8, a: 1}
+  Multiplier: 0.9

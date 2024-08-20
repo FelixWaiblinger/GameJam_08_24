@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDamagable
 {
+    [SerializeField] protected VoidEventChannel _deathEvent;
     [SerializeField] protected SpriteRenderer _sprite;
     [SerializeField] protected Item _item;
     [SerializeField] protected ItemType _itemType;
@@ -52,8 +53,13 @@ public abstract class Enemy : MonoBehaviour, IDamagable
 
     protected void Death()
     {
-        var item = Instantiate(_item, transform.position, Quaternion.identity);
-        item.ItemType = _itemType;
+        _deathEvent.VoidEvent();
+
+        if (Random.value < 0.4)
+        {
+            var item = Instantiate(_item, transform.position, Quaternion.identity);
+            item.ItemType = _itemType;
+        }
 
         Destroy(gameObject);
     }

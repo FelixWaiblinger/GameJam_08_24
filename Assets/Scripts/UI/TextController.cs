@@ -10,13 +10,13 @@ public class TextController : MonoBehaviour {
     [SerializeField] private IntEventChannel _healthCountEventChannel;
 
     private void OnEnable() {
-        _scalesCountEventChannel.OnIntEventRaised += ChangeScalesCount;
-        _healthCountEventChannel.OnIntEventRaised += ChangeHealthCount;
+        _scalesCountEventChannel.OnIntEvent += ChangeScalesCount;
+        _healthCountEventChannel.OnIntEvent += ChangeHealthCount;
 
     }
     private void OnDisable() {
-        _scalesCountEventChannel.OnIntEventRaised -= ChangeScalesCount;
-        _healthCountEventChannel.OnIntEventRaised -= ChangeHealthCount;
+        _scalesCountEventChannel.OnIntEvent -= ChangeScalesCount;
+        _healthCountEventChannel.OnIntEvent -= ChangeHealthCount;
     }
 
     private void ChangeHealthCount(int arg0) {

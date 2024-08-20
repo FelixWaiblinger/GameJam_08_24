@@ -110,19 +110,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b240ada146a750b4c82991d464916733, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _deathEvent: {fileID: 11400000, guid: 8bab4798f0fba9b4f96e4b3620924e3a, type: 2}
+  _healthEvent: {fileID: 11400000, guid: 36bf24a29e7e5c647828df875e4d4c81, type: 2}
   _moveSpeed: 4
   _dashSpeed: 30
   _dashDuration: 0.1
   _dashCooldown: 1
   _attackVisual: {fileID: 2506924689704682643}
   _attackAreaSize: {x: 2, y: 1}
-  _attackDamage: 5
+  _attackDamage: 2
   _attackDuration: 0.4
   _attackCooldown: 0.8
   _sprite: {fileID: 5802774239344375275}
-  _health: 10
+  _health: 3
   _immunityDuration: 1
-  _inventorySize: 10
+  _inventory: {fileID: 11400000, guid: 3888f12dfc6dafe47a27db9fa46a8b80, type: 2}
 --- !u!1 &2506924689704682643
 GameObject:
   m_ObjectHideFlags: 0

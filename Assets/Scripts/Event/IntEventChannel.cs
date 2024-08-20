@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-[CreateAssetMenu(fileName = "IntEventChannel", menuName = "Events/Int Event Channel")]
-public class IntEventChannel : ScriptableObject {
-    public UnityAction<int> OnIntEventRaised;
+[CreateAssetMenu(fileName = "IntEvent", menuName = "Events/Int Event")]
+public class IntEventChannel : ScriptableObject
+{
+    public UnityAction<int> OnIntEvent;
 
-    public void RaiseIntEvent(int arg) {
-        OnIntEventRaised?.Invoke(arg);
+    public void IntEvent(int arg)
+    {
+        OnIntEvent?.Invoke(arg);
     }
 }
