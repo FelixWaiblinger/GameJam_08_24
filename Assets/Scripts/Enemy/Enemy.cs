@@ -55,7 +55,7 @@ public abstract class Enemy : MonoBehaviour, IDamagable
     {
         _deathEvent.VoidEvent();
 
-        if (Random.value < 0.4)
+        if (Random.value < 0.35)
         {
             var item = Instantiate(_item, transform.position, Quaternion.identity);
             item.ItemType = _itemType;

@@ -21,6 +21,7 @@ public class Inventory : ScriptableObject
 
         for (int i = 0; i < items.Count; i++)
         {
+            Debug.Log(items[i]);
             Items.RemoveAt(items[i]);
         }
     }

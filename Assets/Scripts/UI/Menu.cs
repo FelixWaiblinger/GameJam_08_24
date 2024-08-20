@@ -10,6 +10,8 @@ public class Menu : MonoBehaviour
     [SerializeField] GameObject _pauseParent;
     [SerializeField] GameObject _deathParent;
     [SerializeField] GameObject _itemParent;
+    [SerializeField] GameObject _lock1;
+    [SerializeField] GameObject _lock2;
     [SerializeField] Inventory _inventory;
     [SerializeField] List<Button> _slots = new();
     [SerializeField] List<Image> _marks = new();
@@ -55,10 +57,20 @@ public class Menu : MonoBehaviour
                 mark.gameObject.SetActive(false);
             }
         }
+        _selected.Clear();
+    }
+
+    void Reload()
+    {
+        // shady way to update the inventory UI
+        ToggleMenu();
+        ToggleMenu();
     }
 
     public void Select(int index)
     {
+        if (_selected.Contains(index)) return;
+
         _selected.Add(index);
         _marks[index].gameObject.SetActive(true);
     }
@@ -78,9 +90,20 @@ public class Menu : MonoBehaviour
         _inventory.Remove(_selected);
         _selected.Clear();
 
-        // shady way to update the inventory UI
-        ToggleMenu();
-        ToggleMenu();
+        Reload();
+    }
+
+    public void Unlock()
+    {
+        if (_health < 6 || _inventory.Size == 18) return;
+
+        _healthEvent.IntEvent(_health - 5);
+        _inventory.Size += 6;
+
+        if (_inventory.Size == 12) _lock1.SetActive(false);
+        else if (_inventory.Size == 18) _lock2.SetActive(false);
+
+        Reload();
     }
 
     void GetPlayerHealth(int health)

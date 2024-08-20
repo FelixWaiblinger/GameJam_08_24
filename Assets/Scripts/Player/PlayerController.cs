@@ -74,6 +74,8 @@ public class PlayerController : MonoBehaviour, IDamagable, ICollector
         _rb = GetComponent<Rigidbody2D>();
 
         _healthEvent.IntEvent(_health);
+        _inventory.Items.Clear();
+        _inventory.Size = 6;
     }
     
     void Move(Vector2 direction) { if (!_dashing) _moveDirection = direction.normalized; }
