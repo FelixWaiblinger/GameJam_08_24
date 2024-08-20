@@ -63,7 +63,9 @@ public class GameManager : MonoBehaviour
         _data.Waves = _wavesSurvived;
         _data.Enemies = _enemiesKilled;
 
+#if !UNITY_WEBGL
         ReaderWriterJSON.SaveToJSON(_data);
+#endif
 
         StartCoroutine(ReturnCoroutine());
     }

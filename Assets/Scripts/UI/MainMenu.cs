@@ -17,7 +17,9 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+#if !UNITY_WEBGL
         ReaderWriterJSON.LoadFromJSON(ref _data);
+#endif
 
         _highscore.text = "Highscore\nWaves: " + _data.Waves + "\nEnemies: " + _data.Enemies;
     }
